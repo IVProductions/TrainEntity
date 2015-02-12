@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<block
+    name="TrainLogic" 
+    uuid="_50nj4KJFEeS1jcIBVU1rTg" 
+    status="under construction" 
+    type="block" 
+    >
+    <required>
+        <package name="com.bitreactive.library.mqtt"/>
+        <package name="com.bitreactive.library.mqtt.robustmqtt"/>
+        <package name="trainmasterthesis.trainlogic"/>
+        <block name="c0" uuid="_CDPgcD5UEeSLNMcFh65MeQ"/>
+        <block name="c1" uuid="_MQyD460gEeSJE78kDbpBqQ"/>
+        <block name="c2" uuid="_Fg8_w7ILEeSl1YfDSAl_iQ"/>
+        <block name="c3" uuid="_B_CVErFDEeS8J5FRu8hUFA"/>
+    </required>
+</block>

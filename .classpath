@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="no.ntnu.item.arctis.ARCTIS_RUNTIME_CONTAINER"/>
+	<classpathentry kind="con" path="no.ntnu.item.arctis.ARCTIS_DEPENDENCIES_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="lib/ev3classes.jar"/>
+	<classpathentry kind="lib" path="/Users/oeseth/.arctis-repo/com.bitreactive.library.mqtt_2.7.12.jar" sourcepath="/Users/oeseth/.arctis-repo/com.bitreactive.library.mqtt_2.7.12.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

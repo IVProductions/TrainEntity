@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    version="1.0.0" 
+    uuid="_Vno4oLHNEeSl1YfDSAl_iQ" 
+    >
+    <dependencies>
+        <dependency name="com.bitreactive.library.mqtt" uuid="_iVDkMOJLEeGulKFN7xtCsw" version="2.8.0"/>
+        <dependency name="testrobust" uuid="_q_32MLE4EeS8J5FRu8hUFA" version="1.0.0"/>
+    </dependencies>
+</project>
