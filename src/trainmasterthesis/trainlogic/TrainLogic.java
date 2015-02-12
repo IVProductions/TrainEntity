@@ -1,5 +1,9 @@
 package trainmasterthesis.trainlogic;
 
+import trainmasterthesis.colorsensorlogic.ColorSensorLogic.Sleeper;
+import trainmasterthesis.colorsensorlogic.ColorSensorLogic.SleeperColor;
+import trainmasterthesis.communication.Communication.Switch;
+
 import com.bitreactive.library.mqtt.MQTTConfigParam;
 import com.bitreactive.library.mqtt.MQTTMessage;
 import com.bitreactive.library.mqtt.robustmqtt.RobustMQTT.Parameters;
@@ -68,4 +72,36 @@ public class TrainLogic extends Block {
 
 	public void stopAndTerminate() {
 	}	
+	
+	public Switch SwitchAndZoneMapper(Sleeper sleeper) {
+		Switch switcher = null;
+		
+		if(sleeper.prevDetectedColor == SleeperColor.BLUE && sleeper.detectedColor == SleeperColor.YELLOW){
+			// SWITCH 1, ZONE 1
+			switcher = new Switch(1,1, destination);
+		}
+		else if(sleeper.prevDetectedColor == SleeperColor.RED && sleeper.detectedColor == SleeperColor.GREEN){
+			// SWITCH 1, ZONE 1
+			switcher = new Switch(2,1, destination);
+		}
+		else if(sleeper.prevDetectedColor == SleeperColor.GREEN && sleeper.detectedColor == SleeperColor.BLUE){
+			// SWITCH 1, ZONE 1
+			switcher = new Switch(3,1, destination);
+		}
+		else if(sleeper.prevDetectedColor == SleeperColor.RED && sleeper.detectedColor == SleeperColor.BLUE){
+			// SWITCH 1, ZONE 1
+			switcher = new Switch(4,1, destination);
+		}
+		return switcher;
+	}
+
+	public int DestinationMapper(Sleeper sleeper) {
+		
+		// if (destination == sleeper.destination) { //STOP THE TRAIN }
+		if(sleeper.prevDetectedColor == SleeperColor.WHITE && sleeper.detectedColor == SleeperColor.WHITE){
+			// BERGEN F.EKS. Will always be WHITE WHITE atm
+			return 1;
+		}
+		return 0;
+	}
 }

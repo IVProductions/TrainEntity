@@ -1,5 +1,7 @@
 package trainmasterthesis.communication;
 
+import trainmasterthesis.colorsensorlogic.ColorSensorLogic.SleeperColor;
+
 import com.bitreactive.library.mqtt.MQTTConfigParam;
 import com.bitreactive.library.mqtt.MQTTMessage;
 
@@ -13,6 +15,18 @@ public class Communication extends Block {
 	public java.lang.String train_Id;
 	public java.lang.String currentSwitch_Id;
 	public java.lang.String destination;
+	
+	public static class Switch {
+		public int switch_id;
+		public int zone_id;
+		public String destination_id;
+		
+		public Switch(int switch_id, int zone_id, String destination) {
+			this.switch_id = switch_id;
+			this.zone_id = zone_id;
+			this.destination_id = destination;
+		}
+	}
 
 	public MQTTConfigParam initPublish() {
 		MQTTConfigParam m = new MQTTConfigParam("dev.bitreactive.com");
@@ -36,6 +50,11 @@ public class Communication extends Block {
 	}
 
 	public MQTTMessage requestAdvice() {
+		// JSON MQTT Message
+		// MqttMessage message = new MqttMessage();
+		// message.setPayload("{foo: bar, lat: 0.23443, long: 12.3453245}".getBytes());
+		// client.publish("foo", message);
+
 		//Create message that explains what switch the train is approaching, together with speed, length, direction. Also include "from" part
 		String request = train_Id+";"+currentZoneController_Id+";"+currentSwitch_Id+";"+destination; //FOR EXAMPLE: "train1;switch2;1.5;0.35;west";
 		byte[] bytes = request.getBytes();
@@ -57,12 +76,11 @@ public class Communication extends Block {
 		return topicHolder;
 	}
 
-	public String setTopicControllerSwitch(String topicAndSwitch) {
-		String[] list = topicAndSwitch.split(";");
-		currentTopic = list[0];
-		currentZoneController_Id = list[0];
-		currentSwitch_Id = list[1];
-		destination = list[2];
+	public String setTopicControllerSwitch(Switch switcher) {
+		currentTopic = "zonecontroller_"+switcher.zone_id;
+		currentZoneController_Id = "zonecontroller_"+switcher.zone_id;
+		currentSwitch_Id = "switch_"+switcher.switch_id;
+		destination = switcher.destination_id;
 		return currentTopic;
 	}
 
