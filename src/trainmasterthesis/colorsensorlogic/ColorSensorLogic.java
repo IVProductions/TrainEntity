@@ -7,6 +7,9 @@ import lejos.robotics.Color;
 import no.ntnu.item.arctis.runtime.Block;
 
 public class ColorSensorLogic extends Block implements Runnable {
+	
+	
+	
 	private EV3ColorSensor colorSensor;
 	private EV3ColorSensor colorSensorSide;
 	private int detectedColorId;
@@ -25,10 +28,30 @@ public class ColorSensorLogic extends Block implements Runnable {
 	private Integer BLACK = 7; //also grey, same as colorless sleepers
 	private Integer BROWN = 13;//same as table
 	public java.lang.Thread colorSensorThread;
-	public String train_id;
+	//public String train_id;
 	public java.lang.String destination;
 	public boolean isStopping = false;
+	public java.lang.String train_id;
 
+	public static class Sleeper {
+		public SleeperColor prevDetectedColor;
+		public SleeperColor detectedColor;
+		//public double measuredSpeed;
+		//public DecimalFormat numberFormat = new DecimalFormat("#.00"); //used to format the speed to two decimals
+		
+		public Sleeper(SleeperColor prevdetected, SleeperColor detected) {
+			this.detectedColor = detected;
+			this.prevDetectedColor = prevdetected;
+			//measuredSpeed = speed;
+		}
+		/*public String toString() {
+			return String.valueOf(detectedColor)+","+numberFormat.format(measuredSpeed);
+		}*/
+	}
+	
+	public static enum SleeperColor {
+		NONE, RED, GREEN, BLUE, YELLOW, WHITE, BLACK, BROWN;
+	}
 
 	//this method is called from init (thread.start())
 	@Override
@@ -49,7 +72,9 @@ public class ColorSensorLogic extends Block implements Runnable {
 			
 			if(detectedColorIdSide != -1 && !isStopping){
 				isStopping = true;
-				sendToBlock("REACHEDDESTINATION");
+				// SHOULD MAKE UNIQUE COLOR COMBINATIONS FOR DESTINATIONS
+				Sleeper sleeper = new Sleeper(SleeperColor.WHITE, SleeperColor.WHITE);
+				sendToBlock("DESTINATION", sleeper);
 			}
 			
 			/*
@@ -68,7 +93,7 @@ public class ColorSensorLogic extends Block implements Runnable {
 				if (detectedColorId != 7 && detectedColorId != 13 && detectedColorId != 6) {
 					//System.out.println(colorToString(prevDetectedColorId)+" -> "+colorToString(detectedColorId));
 					//System.out.println("DetectedId: "+detectedColorId+", "+colorToString(detectedColorId)+". Last color was: "+prevDetectedColorId+", "+colorToString(prevDetectedColorId));
-					CommunicateWithZoneController(detectedColorId, prevDetectedColorId);
+					SleeperDetecter(detectedColorId, prevDetectedColorId);
 				}
 			}
 			try {
@@ -82,29 +107,49 @@ public class ColorSensorLogic extends Block implements Runnable {
 	}
 	
 	//This method finds the correct zone controller and switch based on the detected color combination and then sends a request 
-	public void CommunicateWithZoneController(int detectedColor, int prevDetectedColor) {
+	public void SleeperDetecter(int detectedColor, int prevDetectedColor) {
+		Sleeper sleeper = null;
 		String colorCombination = prevDetectedColor+""+detectedColor;
 		this.prevDetectedColorId = this.detectedColorId;
-		String topicAndSwitchId;
-		switch(colorCombination) {		
+		//String topicAndSwitchId;
+		switch(colorCombination) {	
+		
+		// BLUE - YELLOW
 		case "23":
-			topicAndSwitchId = "zonecontroller_1;switch_1"; break;
+			sleeper = new Sleeper(SleeperColor.BLUE, SleeperColor.YELLOW);
+			break;
+			//topicAndSwitchId = "zonecontroller_1;switch_1"; 
+			
+		// RED - GREEN
 		case "01":
-			topicAndSwitchId = "zonecontroller_1;switch_2"; break;
+			sleeper = new Sleeper(SleeperColor.RED, SleeperColor.GREEN);
+			break;
+			//topicAndSwitchId = "zonecontroller_1;switch_2"; 
+			
+		// GREEN - BLUE
 		case "12":
-			topicAndSwitchId = "zonecontroller_1;switch_3"; break;
+			sleeper = new Sleeper(SleeperColor.GREEN, SleeperColor.BLUE);
+			break;
+			//topicAndSwitchId = "zonecontroller_1;switch_3"; 
+			
+		// RED - BLUE
 		case "02":
-			topicAndSwitchId = "zonecontroller_1;switch_4"; break;
-				default: return;		
+			sleeper = new Sleeper(SleeperColor.RED, SleeperColor.BLUE);
+			break;
+			//topicAndSwitchId = "zonecontroller_1;switch_4"; 
+		
+		default: return;		
 		}
-		sendToBlock("COMMUNICATEWITHZONECONTROLLER", topicAndSwitchId+";"+destination);
+		
+		sendToBlock("SLEEPER_TRACK", sleeper);
+		//sendToBlock("COMMUNICATEWITHZONECONTROLLER", topicAndSwitchId+";"+destination);
 	}
 
 	public void init() {
 		Button.LEDPattern(2); //Red constant light
 		colorSensorThread = new Thread(this);
 		colorSensorThread.start(); //run run() method
-		sendToBlock("INITOK");
+		//sendToBlock("INITOK");
 	}
 
 	private static String colorToString(int colorId) {
