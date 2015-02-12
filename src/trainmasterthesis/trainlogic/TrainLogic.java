@@ -30,7 +30,7 @@ public class TrainLogic extends Block {
 		//motor.resetTachometer eller noe for å sette nytt nullpunkt --> motor.rotateTo(0) vil da rotere til dette punktet
 		//return train_id;
 	//}
-
+	
 	public Parameters initMQTTParam() {		
 		MQTTConfigParam m = new MQTTConfigParam("dev.bitreactive.com");
 		m.addSubscribeTopic("IVProductionsTrainController");		
