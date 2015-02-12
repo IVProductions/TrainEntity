@@ -12,7 +12,7 @@ public class Motor extends Block {
 	public void initMotor() {
 		Port a = LocalEV3.get().getPort("A");
 		motor = new EV3MediumRegulatedMotor(a);
-		System.out.println("Train is ready!");
+		System.out.println("\n--------------------------------------\n\n   -> TRAIN MOTOR IS READY <-\n\n--------------------------------------\n\n");
 	}
 
 	public void rotateToValue(int value) {

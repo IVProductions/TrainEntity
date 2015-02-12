@@ -14,6 +14,7 @@ public class ColorSensorLogic extends Block implements Runnable {
 	private boolean trainHasStopped = true;
 	private int prevDetectedColorId = -1;
 	private int prevDetectedColorIdSide = -1;
+	
 	//colors
 	private Integer NONE = -1;
 	private Integer RED = 0;
@@ -32,17 +33,18 @@ public class ColorSensorLogic extends Block implements Runnable {
 	//this method is called from init (thread.start())
 	@Override
 	public void run() {
-		System.out.println("Color sensor thread has started..");
+		
 		Thread thisThread = Thread.currentThread();
 		colorSensor = new EV3ColorSensor(SensorPort.S1);
 		colorSensor.setFloodlight(Color.WHITE);
 		
 		colorSensorSide = new EV3ColorSensor(SensorPort.S2);
 		colorSensorSide.setFloodlight(Color.WHITE);
+		
+		System.out.println("\n--------------------------------------\n\n  -> COLOR SENSORS ARE READY <-\n\n--------------------------------------\n\n");
 
 		while(colorSensorThread==thisThread) {
 			detectedColorId = colorSensor.getColorID();
-			
 			detectedColorIdSide = colorSensorSide.getColorID();
 			
 			if(detectedColorIdSide != -1 && !isStopping){
@@ -99,7 +101,6 @@ public class ColorSensorLogic extends Block implements Runnable {
 	}
 
 	public void init() {
-		System.out.println("ColorSensor Init");
 		Button.LEDPattern(2); //Red constant light
 		colorSensorThread = new Thread(this);
 		colorSensorThread.start(); //run run() method
