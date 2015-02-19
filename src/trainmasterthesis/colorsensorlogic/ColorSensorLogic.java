@@ -16,7 +16,7 @@ public class ColorSensorLogic extends Block implements Runnable {
 	private int detectedColorIdSide;
 	private boolean trainHasStopped = true;
 	private int prevDetectedColorId = -1;
-	private int prevDetectedColorIdSide = -1;
+	//private int prevDetectedColorIdSide = -1;
 	
 	//colors
 	private Integer NONE = -1;
@@ -60,15 +60,23 @@ public class ColorSensorLogic extends Block implements Runnable {
 		Thread thisThread = Thread.currentThread();
 		colorSensor = new EV3ColorSensor(SensorPort.S1);
 		colorSensor.setFloodlight(Color.WHITE);
-		
-		colorSensorSide = new EV3ColorSensor(SensorPort.S2);
-		colorSensorSide.setFloodlight(Color.WHITE);
+		try {
+			colorSensorSide = new EV3ColorSensor(SensorPort.S2);
+			colorSensorSide.setFloodlight(Color.WHITE);
+		} catch (Exception e) {
+			System.out.println("Side sensor is off. Ignoring this sensor.");
+		}
+
 		
 		System.out.println("\n--------------------------------------\n\n  -> COLOR SENSORS ARE READY <-\n\n--------------------------------------\n\n");
 
 		while(colorSensorThread==thisThread) {
 			detectedColorId = colorSensor.getColorID();
-			detectedColorIdSide = colorSensorSide.getColorID();
+			try {
+				detectedColorIdSide = colorSensorSide.getColorID();
+			} catch (Exception e) {
+				detectedColorIdSide = -1;  //if side sensor is off, it won't detect anything
+			}
 			
 			if(detectedColorIdSide != -1 && !isStopping){
 				isStopping = true;
