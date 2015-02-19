@@ -1,5 +1,16 @@
 package trainmasterthesis.colorsensorlogic;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.CodeSource;
+
 import lejos.hardware.Button;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
@@ -65,7 +76,7 @@ public class ColorSensorLogic extends Block implements Runnable {
 		colorSensorSide.setFloodlight(Color.WHITE);
 		
 		System.out.println("\n--------------------------------------\n\n  -> COLOR SENSORS ARE READY <-\n\n--------------------------------------\n\n");
-
+		
 		while(colorSensorThread==thisThread) {
 			detectedColorId = colorSensor.getColorID();
 			detectedColorIdSide = colorSensorSide.getColorID();
@@ -104,6 +115,30 @@ public class ColorSensorLogic extends Block implements Runnable {
 			}
 
 		} 
+	}
+	
+	// Write to file for statistics
+	public void writeToFile(String input) throws IOException{
+		BufferedWriter out = new BufferedWriter(new FileWriter("statistics.txt"));
+	    out.write(input);
+	    out.close();
+	    /*
+		CodeSource src = this.getClass().getProtectionDomain().getCodeSource();
+		if (src != null) {
+			try {
+				URL url = new URL(src.getLocation(), "hello.txt");
+				
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				System.out.println("fail");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} 
+		else {
+			System.out.println("fail");
+		}*/
 	}
 	
 	//This method finds the correct zone controller and switch based on the detected color combination and then sends a request 

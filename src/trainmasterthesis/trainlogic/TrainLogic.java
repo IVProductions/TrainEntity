@@ -14,7 +14,7 @@ public class TrainLogic extends Block {
 
 	
 	//public static EV3MediumRegulatedMotor motor;
-	public String train_id = "train_1";
+	public String train_id = "train_2";
 	public String destination = "station_1";
 	
 	/*public void InitMotors() {
