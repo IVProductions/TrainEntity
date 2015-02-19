@@ -51,7 +51,12 @@ public class TrainLogic extends Block {
 		if (trainId.equals(train_id)) {
 			String action = requestList[2];
 			if(action.equalsIgnoreCase("setangle")) {
-				int value = Integer.parseInt(requestList[3]);
+				int value = 0;
+				try {
+					value = Integer.parseInt(requestList[3]);
+				} catch (Exception e) {
+					System.out.println("Train received invalid speed value -> Speed is set to 0.");
+				}
 				System.out.println("Train-"+this.train_id+" has been commanded to rotate to value: "+value);			
 				sendToBlock("ROTATEMOTOR",value);			
 			}
