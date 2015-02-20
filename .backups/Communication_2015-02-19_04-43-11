@@ -147,9 +147,6 @@
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_sPUTQLKVEeSBkqdkVyrO9g" name="terminate" incoming="_v0aKoLKVEeSBkqdkVyrO9g" inPartition="_LJI8kLKVEeSBkqdkVyrO9g" parameter="_sPi8wLKVEeSBkqdkVyrO9g"/>
       <node xmi:type="uml:ActivityParameterNode" xmi:id="_gpBgULhNEeSj8-oOEttpHA" name="setMotorAngle" incoming="_-nHrwLhNEeSj8-oOEttpHA" inPartition="_LJI8kLKVEeSBkqdkVyrO9g" type="_TY5MQLKVEeSBkqdkVyrO9g" parameter="_gpPiwLhNEeSj8-oOEttpHA"/>
       <node xmi:type="uml:AcceptEventAction" xmi:id="_6Zi4EbhNEeSj8-oOEttpHA" name="r1" incoming="__H-WELhNEeSj8-oOEttpHA" inPartition="_LJI8kLKVEeSBkqdkVyrO9g">
-        <ownedComment xmi:id="_Jxp8YLkQEeSTU8Z4iKSb5A">
-          <body>repeating</body>
-        </ownedComment>
         <result xmi:id="_9Cf3UbhNEeSj8-oOEttpHA" name="parameter" outgoing="_-nHrwLhNEeSj8-oOEttpHA" inPartition="_LJI8kLKVEeSBkqdkVyrO9g" type="_TY5MQLKVEeSBkqdkVyrO9g"/>
         <trigger xmi:id="_6aCnULhNEeSj8-oOEttpHA" name="SETMOTORANGLE" event="_6aJVALhNEeSj8-oOEttpHA"/>
       </node>

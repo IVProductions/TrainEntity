@@ -1,7 +1,7 @@
 package trainmasterthesis.communication;
 
 import trainmasterthesis.colorsensorlogic.ColorSensorLogic.SleeperColor;
-
+import java.util.UUID;
 import com.bitreactive.library.mqtt.MQTTConfigParam;
 import com.bitreactive.library.mqtt.MQTTMessage;
 
@@ -15,6 +15,7 @@ public class Communication extends Block {
 	public java.lang.String train_Id;
 	public java.lang.String currentSwitch_Id;
 	public java.lang.String destination;
+	public java.lang.String requestId;
 	
 	public static class Switch {
 		public int switch_id;
@@ -35,14 +36,18 @@ public class Communication extends Block {
 	
 	public void handleZoneControllerMessage(MQTTMessage mqttMessage) {
 		//LOGIC FOR MESSAGES SENT FROM ZONE CONTROLLER
-		String initialRequestString = new String(mqttMessage.getPayload());
-		String[] requestList = initialRequestString.split(";");
-		String sentFromZoneController_Id = requestList[0];
-		String sentToTrain_Id = requestList[1];
-		if (sentFromZoneController_Id != currentZoneController_Id || sentToTrain_Id != train_Id) return;		//FIRST MAKE SURE IT IS SENT FROM THE CORRECT ZONE CONTROLLER
-		//boolean sentFromController = requestList[0].toLowerCase() == "controller";
-		//int trainId = Integer.parseInt(requestList[1]);
-		
+		String initialResponseString = new String(mqttMessage.getPayload());
+		String[] responseList = initialResponseString.split(";");
+		String sentFromZoneController_Id = responseList[0];
+		String sentToTrain_Id = responseList[1];
+		String command = responseList[2];
+		String responseReqId = responseList[3];
+		if (!sentFromZoneController_Id.equals(currentZoneController_Id) || !sentToTrain_Id.equals(train_Id)) return;		//FIRST MAKE SURE IT IS SENT FROM THE CORRECT ZONE CONTROLLER
+		System.out.println("Received response from zonecontroller: "+initialResponseString);
+		if (command.equals("ok")) return;
+		else {
+			sendToBlock("SETMOTORANGLE",0); //make train stop
+		}
 	}
 
 	public boolean sameAsLastTopic(String currenTopic) {
@@ -54,13 +59,14 @@ public class Communication extends Block {
 		// MqttMessage message = new MqttMessage();
 		// message.setPayload("{foo: bar, lat: 0.23443, long: 12.3453245}".getBytes());
 		// client.publish("foo", message);
+		requestId = UUID.randomUUID().toString();
 
 		//Create message that explains what switch the train is approaching, together with speed, length, direction. Also include "from" part
-		String request = train_Id+";"+currentZoneController_Id+";"+currentSwitch_Id+";"+destination; //FOR EXAMPLE: "train1;switch2;1.5;0.35;west";
+		String request = train_Id+";"+currentZoneController_Id+";"+currentSwitch_Id+";"+destination+";"+requestId; //FOR EXAMPLE: "train1;switch2;1.5;0.35;west";
 		byte[] bytes = request.getBytes();
 		//String topic = "IVProductionsSwitchController";
 		MQTTMessage message = new MQTTMessage(bytes, currentTopic);
-		message.setQoS(2);
+		message.setQoS(0);
 		return message;
 	}
 
