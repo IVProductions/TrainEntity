@@ -1,5 +1,9 @@
 package trainmasterthesis.trainlogic;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import trainmasterthesis.colorsensorlogic.ColorSensorLogic.Sleeper;
 import trainmasterthesis.colorsensorlogic.ColorSensorLogic.SleeperColor;
 import trainmasterthesis.communication.Communication.Switch;
@@ -16,6 +20,7 @@ public class TrainLogic extends Block {
 	//public static EV3MediumRegulatedMotor motor;
 	public String train_id = "train_2";
 	public String destination = "station_1";
+	public static BufferedWriter writer;
 	
 	/*public void InitMotors() {
 		Port a = LocalEV3.get().getPort("A");
@@ -39,6 +44,7 @@ public class TrainLogic extends Block {
 		MQTTConfigParam m = new MQTTConfigParam("dev.bitreactive.com");
 		m.addSubscribeTopic("IVProductionsTrainController");		
 		Parameters p = new Parameters(m);
+		
 		return p;
 	}
 	
@@ -68,6 +74,12 @@ public class TrainLogic extends Block {
 			else if (action.equalsIgnoreCase("terminate")) {
 				//motor.rotateTo(0); //stop train
 				System.out.println("Train-"+this.train_id+" is terminating...");
+				try {
+					writer.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				sendToBlock("STOPANDTERMINATE");
 			}
 		}
@@ -108,5 +120,15 @@ public class TrainLogic extends Block {
 			return 1;
 		}
 		return 0;
+	}
+
+	public BufferedWriter writeToFileInit() {
+		try {
+			writer = new BufferedWriter(new FileWriter("statistics.txt"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return writer;
 	}
 }
