@@ -3,6 +3,7 @@ package trainmasterthesis.trainlogic;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 
 import trainmasterthesis.colorsensorlogic.ColorSensorLogic.Sleeper;
 import trainmasterthesis.colorsensorlogic.ColorSensorLogic.SleeperColor;
@@ -18,7 +19,7 @@ public class TrainLogic extends Block {
 
 	
 	//public static EV3MediumRegulatedMotor motor;
-	public String train_id = "train_2";
+	public String train_id = "train_1";
 	public String destination = "station_1";
 	public static BufferedWriter writer;
 	
@@ -41,7 +42,7 @@ public class TrainLogic extends Block {
 	//}
 	
 	public Parameters initMQTTParam() {		
-		MQTTConfigParam m = new MQTTConfigParam("dev.bitreactive.com");
+		MQTTConfigParam m = new MQTTConfigParam("192.168.0.100");
 		m.addSubscribeTopic("IVProductionsTrainController");		
 		Parameters p = new Parameters(m);
 		
@@ -51,9 +52,11 @@ public class TrainLogic extends Block {
 	public void handleMessage(MQTTMessage mqttMessage) {
 		String initialRequestString = new String(mqttMessage.getPayload());
 		System.out.println("Received command: "+initialRequestString);
+		
 		String[] requestList = initialRequestString.split(";");
 		boolean sentFromController = requestList[0].toLowerCase() == "controller";
 		String trainId = requestList[1];
+		
 		if (trainId.equals(train_id)) {
 			String action = requestList[2];
 			if(action.equalsIgnoreCase("setangle")) {
@@ -130,5 +133,15 @@ public class TrainLogic extends Block {
 			e1.printStackTrace();
 		}
 		return writer;
+	}
+
+	public String newDestination() {
+		String newDestination = destination;
+		while(destination.equals(newDestination)){
+			Random rn = new Random();
+			int randomStation = rn.nextInt(5) + 1;
+			newDestination = "station_"+randomStation;
+		}
+		return newDestination;
 	}
 }
